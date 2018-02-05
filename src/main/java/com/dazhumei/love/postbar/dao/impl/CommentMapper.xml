@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dazhumei.love.postbar.dao.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.dazhumei.love.postbar.entity.Comment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="postid" property="postid" jdbcType="VARCHAR" />
+    <result column="cauthor" property="cauthor" jdbcType="VARCHAR" />
+    <result column="carank" property="carank" jdbcType="VARCHAR" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dazhumei.love.postbar.entity.Comment" extends="BaseResultMap" >
+    <result column="comment" property="comment" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, postid, cauthor, carank, creat_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    comment
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from p_comment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from p_comment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    insert into p_comment (id, postid, cauthor, 
+      carank, creat_time, comment
+      )
+    values (#{id,jdbcType=VARCHAR}, #{postid,jdbcType=VARCHAR}, #{cauthor,jdbcType=VARCHAR}, 
+      #{carank,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    insert into p_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="postid != null" >
+        postid,
+      </if>
+      <if test="cauthor != null" >
+        cauthor,
+      </if>
+      <if test="carank != null" >
+        carank,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="postid != null" >
+        #{postid,jdbcType=VARCHAR},
+      </if>
+      <if test="cauthor != null" >
+        #{cauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="carank != null" >
+        #{carank,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    update p_comment
+    <set >
+      <if test="postid != null" >
+        postid = #{postid,jdbcType=VARCHAR},
+      </if>
+      <if test="cauthor != null" >
+        cauthor = #{cauthor,jdbcType=VARCHAR},
+      </if>
+      <if test="carank != null" >
+        carank = #{carank,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null" >
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    update p_comment
+    set postid = #{postid,jdbcType=VARCHAR},
+      cauthor = #{cauthor,jdbcType=VARCHAR},
+      carank = #{carank,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      comment = #{comment,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    update p_comment
+    set postid = #{postid,jdbcType=VARCHAR},
+      cauthor = #{cauthor,jdbcType=VARCHAR},
+      carank = #{carank,jdbcType=VARCHAR},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
