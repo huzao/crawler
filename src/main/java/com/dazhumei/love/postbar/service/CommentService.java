@@ -1,11 +1,9 @@
-package com.dazhumei.love.postbar.dao;
-
-import org.apache.ibatis.annotations.Mapper;
+package com.dazhumei.love.postbar.service;
 
 import com.dazhumei.love.postbar.entity.Comment;
-@Mapper
-public interface CommentMapper {
 
+public interface CommentService {
+	
 	/**
 	 * 添加评论
 	 * @param comment

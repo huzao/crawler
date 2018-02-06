@@ -2,6 +2,7 @@ package com.dazhumei.love.postbar.service;
 
 import com.dazhumei.love.postbar.entity.Postbar;
 
+
 public interface PostBarService {
 	
 	/**

@@ -1,7 +1,9 @@
 package com.dazhumei.love.postbar.dao;
 
-import com.dazhumei.love.postbar.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 
+import com.dazhumei.love.postbar.entity.User;
+@Mapper
 public interface UserMapper {
     int deleteByPrimaryKey(String id);
 

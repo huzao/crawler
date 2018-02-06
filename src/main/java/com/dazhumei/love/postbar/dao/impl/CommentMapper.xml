@@ -34,49 +34,53 @@
 <!--       #{carank,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=LONGVARCHAR} -->
 <!--       ) -->
 <!--   </insert> -->
-<!--   <insert id="insertSelective" parameterType="com.dazhumei.love.postbar.entity.Comment" > -->
-<!--     insert into p_comment -->
-<!--     <trim prefix="(" suffix=")" suffixOverrides="," > -->
-<!--       <if test="id != null" > -->
-<!--         id, -->
-<!--       </if> -->
-<!--       <if test="postid != null" > -->
-<!--         postid, -->
-<!--       </if> -->
-<!--       <if test="cauthor != null" > -->
-<!--         cauthor, -->
-<!--       </if> -->
-<!--       <if test="carank != null" > -->
-<!--         carank, -->
-<!--       </if> -->
-<!--       <if test="creatTime != null" > -->
-<!--         creat_time, -->
-<!--       </if> -->
-<!--       <if test="comment != null" > -->
-<!--         comment, -->
-<!--       </if> -->
-<!--     </trim> -->
-<!--     <trim prefix="values (" suffix=")" suffixOverrides="," > -->
-<!--       <if test="id != null" > -->
-<!--         #{id,jdbcType=VARCHAR}, -->
-<!--       </if> -->
-<!--       <if test="postid != null" > -->
-<!--         #{postid,jdbcType=VARCHAR}, -->
-<!--       </if> -->
-<!--       <if test="cauthor != null" > -->
-<!--         #{cauthor,jdbcType=VARCHAR}, -->
-<!--       </if> -->
-<!--       <if test="carank != null" > -->
-<!--         #{carank,jdbcType=VARCHAR}, -->
-<!--       </if> -->
-<!--       <if test="creatTime != null" > -->
-<!--         #{creatTime,jdbcType=TIMESTAMP}, -->
-<!--       </if> -->
-<!--       <if test="comment != null" > -->
-<!--         #{comment,jdbcType=LONGVARCHAR}, -->
-<!--       </if> -->
-<!--     </trim> -->
-<!--   </insert> -->
+
+		<!-- 添加评论 -->
+	  <insert id="insertComment" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+	    insert into p_comment
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        id,
+	      </if>
+	      <if test="postid != null" >
+	        postid,
+	      </if>
+	      <if test="cauthor != null" >
+	        cauthor,
+	      </if>
+	      <if test="carank != null" >
+	        carank,
+	      </if>
+	      <if test="creatTime != null" >
+	        creat_time,
+	      </if>
+	      <if test="comment != null" >
+	        comment,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        #{id,jdbcType=VARCHAR},
+	      </if>
+	      <if test="postid != null" >
+	        #{postid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="cauthor != null" >
+	        #{cauthor,jdbcType=VARCHAR},
+	      </if>
+	      <if test="carank != null" >
+	        #{carank,jdbcType=VARCHAR},
+	      </if>
+	      <if test="creatTime != null" >
+	        #{creatTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="comment != null" >
+	        #{comment,jdbcType=LONGVARCHAR},
+	      </if>
+	    </trim>
+	  </insert>
+  
+  
 <!--   <update id="updateByPrimaryKeySelective" parameterType="com.dazhumei.love.postbar.entity.Comment" > -->
 <!--     update p_comment -->
 <!--     <set > -->

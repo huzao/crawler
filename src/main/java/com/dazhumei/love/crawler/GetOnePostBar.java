@@ -8,19 +8,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.dazhumei.love.postbar.entity.Comment;
+import com.dazhumei.love.postbar.entity.Post;
+import com.dazhumei.love.postbar.entity.Postbar;
+import com.dazhumei.love.postbar.service.CommentService;
+import com.dazhumei.love.postbar.service.PostBarService;
+import com.dazhumei.love.postbar.service.PostService;
+import com.dazhumei.love.utils.UUIDUtil;
 
-public class GetOnePostBar extends Thread{
+
+public class GetOnePostBar{
 	
-	public void run(String name) {
-//		String name="武汉纺织大学";
-		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
-	}
+//	public void run(String name) {
+////		String name="武汉纺织大学";
+//		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
+//	}
 
 	// 将抓取的网页变成html文件，保存在本地
 	public static void SaveHtml(String url, String path) {
@@ -58,7 +67,7 @@ public class GetOnePostBar extends Thread{
 	}
 	
 	//保存贴吧所以页面，然后解析，然后删除
-	public static void GetAllPagePost(String url, String path,String name){
+	public static void GetAllPagePost(String url, String path,String name,PostBarService postBarService,PostService postService,CommentService commentService){
 		
 		System.out.println("爬取的网址为："+url+",保存在："+path);
 		SaveHtml(url, path);
@@ -74,7 +83,7 @@ public class GetOnePostBar extends Thread{
 			System.out.println("解析出错");
 			e.printStackTrace();
 		}
-		
+		Postbar postbar=new Postbar();
 		Elements titles=doc.getElementsByTag("title");
 		String title=titles.first().text();
 		String tieba=title.substring(0, title.indexOf("-"));
@@ -85,8 +94,16 @@ public class GetOnePostBar extends Thread{
 		System.out.println("关注人数："+menNum);
 		System.out.println("帖子数："+infoNum);
 		
+		String barid=UUIDUtil.getUUID();
+		postbar.setId(barid);
+		postbar.setTitle(title);
+		postbar.setPostbar(tieba);
+		postbar.setConcernnum(menNum);
+		postbar.setPostnum(infoNum);
+		postbar.setCreatTime(new Date());
+		postBarService.insertPostBar(postbar);
 		//读取一个页面所有帖子简介和所有评论
-		GetOnePagePost(doc,name);
+		GetOnePagePost(doc,name,barid,postService,commentService);
 		
 		Elements elements=doc.getElementsByClass("last pagination-item ");
 		String element=elements.first().toString();
@@ -110,7 +127,7 @@ public class GetOnePostBar extends Thread{
 			}
 			
 			//读取一个页面所有帖子简介和所有评论
-			GetOnePagePost(docp,name);
+			GetOnePagePost(docp,name,barid,postService,commentService);
 			
 			//删除
 			if (filep!=null) {
@@ -126,13 +143,14 @@ public class GetOnePostBar extends Thread{
 	}
 	
 	//得到一页的所以帖子
-	public static void GetOnePagePost(Document doc,String name){
+	public static void GetOnePagePost(Document doc,String name,String barid,PostService postService,CommentService commentService){
 		//读取一个页面所有帖子简介和所有评论
 		Elements posts=doc.getElementsByClass("t_con cleafix");
 		for (Element element : posts) {
+			
+			Post p=new Post();
 			String repnum=element.getElementsByClass("threadlist_rep_num center_text").first().text();
 			System.out.println("回复数为："+repnum);
-			
 			String post=element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first().text();
 			System.out.println("帖子标题为："+post);
 			
@@ -154,11 +172,24 @@ public class GetOnePostBar extends Thread{
 				String lastTime=element.getElementsByClass("threadlist_reply_date pull_right j_reply_data").first().text();
 				System.out.println("最后回复时间："+lastTime);
 				
+				p.setContent(content);
+				p.setLastpeople(lastpeople);
+				p.setLastTime(lastTime);
 			}
 			
 			String urlstr=element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first().toString();
 			String urlp=urlstr.substring(urlstr.indexOf("href=\"")+6, urlstr.indexOf("\" title"));
 			System.out.println("帖子的网址为："+urlp);
+			
+			String pid=UUIDUtil.getUUID();
+			p.setId(pid);
+			p.setPostbarid(barid);
+			p.setRepnum(repnum);
+			p.setPosttitle(post);
+			p.setPauthor(author);
+			p.setCreatTime(creatTime);
+			p.setPosturl("http://tieba.baidu.com"+urlp);
+			postService.insertPost(p);
 			System.out.println("开始下载帖子...");
 			//读取帖子的所以评论
 			SaveHtml("http://tieba.baidu.com"+urlp, "/html/"+name+urlp.replace("/", "_")+".html");
@@ -179,6 +210,7 @@ public class GetOnePostBar extends Thread{
 			//读取第一页评论
 			Elements commonts=docc.getElementsByClass("l_post j_l_post l_post_bright  ");
 			for (Element element2 : commonts) {
+				Comment c=new Comment();
 				Element link = element2.getElementsByTag("cc").first();
 				String comment=link.getElementsByTag("div").first().text();
 				String cauthor=element2.getElementsByClass("d_badge_title").first().text();
@@ -186,6 +218,14 @@ public class GetOnePostBar extends Thread{
 				System.out.println("作者名字："+cauthor);
 				System.out.println("作者等级："+crank);
 				System.out.println("评论为："+comment);
+				
+				c.setId(UUIDUtil.getUUID());
+				c.setPostid(pid);
+				c.setCauthor(cauthor);
+				c.setCarank(crank);
+				c.setCreatTime(new Date());
+				c.setComment(comment);
+				commentService.insertComment(c);
 			}
 			
 			String pagenum = htmlc.substring(htmlc.indexOf("</span>回复贴，共<span class=\"red\">") + 30,htmlc.indexOf("</span>页</li>"));
@@ -208,6 +248,7 @@ public class GetOnePostBar extends Thread{
 				
 				Elements commontss=doccc.getElementsByClass("l_post j_l_post l_post_bright  ");
 				for (Element element3 : commontss) {
+					Comment c=new Comment();
 					Element link = element3.getElementsByTag("cc").first();
 					String comment=link.getElementsByTag("div").first().text();
 					String cauthor=element3.getElementsByClass("d_badge_title").first().text();
@@ -215,6 +256,14 @@ public class GetOnePostBar extends Thread{
 					System.out.println("作者名字："+cauthor);
 					System.out.println("作者等级："+crank);
 					System.out.println("评论为："+comment);
+					
+					c.setId(UUIDUtil.getUUID());
+					c.setPostid(pid);
+					c.setCauthor(cauthor);
+					c.setCarank(crank);
+					c.setCreatTime(new Date());
+					c.setComment(comment);
+					commentService.insertComment(c);
 				}
 				
 				//删除
@@ -232,9 +281,9 @@ public class GetOnePostBar extends Thread{
 	}
 
 	
-	public static void main(String[] args) {
-		String name="武汉纺织大学";
-		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
-	}
+//	public static void main(String[] args) {
+//		String name="武汉纺织大学";
+//		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
+//	}
 	
 }

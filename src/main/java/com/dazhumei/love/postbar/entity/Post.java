@@ -1,7 +1,5 @@
 package com.dazhumei.love.postbar.entity;
 
-import java.util.Date;
-
 public class Post {
 	private String id;
 	//贴吧id
@@ -11,11 +9,11 @@ public class Post {
 	//帖子作者
 	private String pauthor;
 	//创建时间
-	private Date creatTime;
+	private String creatTime;
 	//最好评论人
 	private String lastpeople;
 	//最后评论时间
-	private Date lastTime;
+	private String lastTime;
 	//帖子网址
 	private String posturl;
 	//帖子题目
@@ -71,11 +69,11 @@ public class Post {
 		this.pauthor = pauthor == null ? null : pauthor.trim();
 	}
 
-	public Date getCreatTime() {
+	public String getCreatTime() {
 		return creatTime;
 	}
 
-	public void setCreatTime(Date creatTime) {
+	public void setCreatTime(String creatTime) {
 		this.creatTime = creatTime;
 	}
 
@@ -87,11 +85,11 @@ public class Post {
 		this.lastpeople = lastpeople == null ? null : lastpeople.trim();
 	}
 
-	public Date getLastTime() {
+	public String getLastTime() {
 		return lastTime;
 	}
 
-	public void setLastTime(Date lastTime) {
+	public void setLastTime(String lastTime) {
 		this.lastTime = lastTime;
 	}
 

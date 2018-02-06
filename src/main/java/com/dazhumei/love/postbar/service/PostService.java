@@ -1,11 +1,8 @@
-package com.dazhumei.love.postbar.dao;
-
-import org.apache.ibatis.annotations.Mapper;
+package com.dazhumei.love.postbar.service;
 
 import com.dazhumei.love.postbar.entity.Post;
 
-@Mapper
-public interface PostMapper {
+public interface PostService {
 	
 	/**
 	 * 添加帖子
@@ -13,5 +10,5 @@ public interface PostMapper {
 	 * @return
 	 */
 	public int insertPost(Post post);
-	
+
 }
