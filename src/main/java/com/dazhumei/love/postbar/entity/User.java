@@ -3,43 +3,43 @@ package com.dazhumei.love.postbar.entity;
 import java.util.Date;
 
 public class User {
-    private String id;
+	private String id;
+	//用户名
+	private String uname;
+	//等级
+	private String urank;
+	//创建时间
+	private Date creatTime;
 
-    private String uname;
+	public String getId() {
+		return id;
+	}
 
-    private String urank;
+	public void setId(String id) {
+		this.id = id == null ? null : id.trim();
+	}
 
-    private Date creatTime;
+	public String getUname() {
+		return uname;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setUname(String uname) {
+		this.uname = uname == null ? null : uname.trim();
+	}
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
-    }
+	public String getUrank() {
+		return urank;
+	}
 
-    public String getUname() {
-        return uname;
-    }
+	public void setUrank(String urank) {
+		this.urank = urank == null ? null : urank.trim();
+	}
 
-    public void setUname(String uname) {
-        this.uname = uname == null ? null : uname.trim();
-    }
+	public Date getCreatTime() {
+		return creatTime;
+	}
 
-    public String getUrank() {
-        return urank;
-    }
-
-    public void setUrank(String urank) {
-        this.urank = urank == null ? null : urank.trim();
-    }
-
-    public Date getCreatTime() {
-        return creatTime;
-    }
-
-    public void setCreatTime(Date creatTime) {
-        this.creatTime = creatTime;
-    }
+	public void setCreatTime(Date creatTime) {
+		this.creatTime = creatTime;
+	}
 }

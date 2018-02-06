@@ -30,7 +30,9 @@
       #{concernnum,jdbcType=VARCHAR}, #{postnum,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dazhumei.love.postbar.entity.Postbar" >
+  
+  <!-- 添加贴吧 -->
+  <insert id="insertPostBar" parameterType="com.dazhumei.love.postbar.entity.Postbar" >
     insert into p_postbar
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,6 +75,7 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.dazhumei.love.postbar.entity.Postbar" >
     update p_postbar
     <set >

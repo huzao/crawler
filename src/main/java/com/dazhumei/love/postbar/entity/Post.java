@@ -3,29 +3,27 @@ package com.dazhumei.love.postbar.entity;
 import java.util.Date;
 
 public class Post {
-    private String id;
+	private String id;
+	//贴吧id
+	private String postbarid;
+	//回复数
+	private String repnum;
+	//帖子作者
+	private String pauthor;
+	//创建时间
+	private Date creatTime;
+	//最好评论人
+	private String lastpeople;
+	//最后评论时间
+	private Date lastTime;
+	//帖子网址
+	private String posturl;
+	//帖子题目
+	private String posttitle;
+	//帖子内容（简介）
+	private String content;
 
-    private String postbarid;
-
-    private String repnum;
-
-    private String pauthor;
-
-    private Date creatTime;
-
-    private String lastpeople;
-
-    private Date lastTime;
-
-    private String posturl;
-    
-    private String posttitle;
-
-    private String content;
-    
-    
-
-    public String getPosttitle() {
+	public String getPosttitle() {
 		return posttitle;
 	}
 
@@ -42,66 +40,66 @@ public class Post {
 	}
 
 	public String getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
-    }
+	public void setId(String id) {
+		this.id = id == null ? null : id.trim();
+	}
 
-    public String getPostbarid() {
-        return postbarid;
-    }
+	public String getPostbarid() {
+		return postbarid;
+	}
 
-    public void setPostbarid(String postbarid) {
-        this.postbarid = postbarid == null ? null : postbarid.trim();
-    }
+	public void setPostbarid(String postbarid) {
+		this.postbarid = postbarid == null ? null : postbarid.trim();
+	}
 
-    public String getRepnum() {
-        return repnum;
-    }
+	public String getRepnum() {
+		return repnum;
+	}
 
-    public void setRepnum(String repnum) {
-        this.repnum = repnum == null ? null : repnum.trim();
-    }
+	public void setRepnum(String repnum) {
+		this.repnum = repnum == null ? null : repnum.trim();
+	}
 
-    public String getPauthor() {
-        return pauthor;
-    }
+	public String getPauthor() {
+		return pauthor;
+	}
 
-    public void setPauthor(String pauthor) {
-        this.pauthor = pauthor == null ? null : pauthor.trim();
-    }
+	public void setPauthor(String pauthor) {
+		this.pauthor = pauthor == null ? null : pauthor.trim();
+	}
 
-    public Date getCreatTime() {
-        return creatTime;
-    }
+	public Date getCreatTime() {
+		return creatTime;
+	}
 
-    public void setCreatTime(Date creatTime) {
-        this.creatTime = creatTime;
-    }
+	public void setCreatTime(Date creatTime) {
+		this.creatTime = creatTime;
+	}
 
-    public String getLastpeople() {
-        return lastpeople;
-    }
+	public String getLastpeople() {
+		return lastpeople;
+	}
 
-    public void setLastpeople(String lastpeople) {
-        this.lastpeople = lastpeople == null ? null : lastpeople.trim();
-    }
+	public void setLastpeople(String lastpeople) {
+		this.lastpeople = lastpeople == null ? null : lastpeople.trim();
+	}
 
-    public Date getLastTime() {
-        return lastTime;
-    }
+	public Date getLastTime() {
+		return lastTime;
+	}
 
-    public void setLastTime(Date lastTime) {
-        this.lastTime = lastTime;
-    }
+	public void setLastTime(Date lastTime) {
+		this.lastTime = lastTime;
+	}
 
-    public String getPosturl() {
-        return posturl;
-    }
+	public String getPosturl() {
+		return posturl;
+	}
 
-    public void setPosturl(String posturl) {
-        this.posturl = posturl == null ? null : posturl.trim();
-    }
+	public void setPosturl(String posturl) {
+		this.posturl = posturl == null ? null : posturl.trim();
+	}
 }

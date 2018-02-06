@@ -15,7 +15,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
-public class GetOnePostBar {
+public class GetOnePostBar extends Thread{
+	
+	public void run(String name) {
+//		String name="武汉纺织大学";
+		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
+	}
 
 	// 将抓取的网页变成html文件，保存在本地
 	public static void SaveHtml(String url, String path) {

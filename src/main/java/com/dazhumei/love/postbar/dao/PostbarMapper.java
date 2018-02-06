@@ -1,17 +1,27 @@
 package com.dazhumei.love.postbar.dao;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.dazhumei.love.postbar.entity.Postbar;
 
+@Mapper
 public interface PostbarMapper {
-    int deleteByPrimaryKey(String id);
 
-    int insert(Postbar record);
+	int deleteByPrimaryKey(String id);
 
-    int insertSelective(Postbar record);
+	int insert(Postbar record);
 
-    Postbar selectByPrimaryKey(String id);
+	/**
+	 * 添加贴吧
+	 * 
+	 * @param postbar
+	 * @return
+	 */
+	int insertPostBar(Postbar postbar);
 
-    int updateByPrimaryKeySelective(Postbar record);
+	Postbar selectByPrimaryKey(String id);
 
-    int updateByPrimaryKey(Postbar record);
+	int updateByPrimaryKeySelective(Postbar record);
+
+	int updateByPrimaryKey(Postbar record);
 }

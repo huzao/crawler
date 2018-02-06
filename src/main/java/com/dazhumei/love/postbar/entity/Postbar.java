@@ -3,63 +3,63 @@ package com.dazhumei.love.postbar.entity;
 import java.util.Date;
 
 public class Postbar {
-    private String id;
+	private String id;
+	//title
+	private String title;
+	//贴吧
+	private String postbar;
+	//关注人数
+	private String concernnum;
+	//帖子数
+	private String postnum;
+	//创建时间
+	private Date creatTime;
 
-    private String title;
+	public String getId() {
+		return id;
+	}
 
-    private String postbar;
+	public void setId(String id) {
+		this.id = id == null ? null : id.trim();
+	}
 
-    private String concernnum;
+	public String getTitle() {
+		return title;
+	}
 
-    private String postnum;
+	public void setTitle(String title) {
+		this.title = title == null ? null : title.trim();
+	}
 
-    private Date creatTime;
+	public String getPostbar() {
+		return postbar;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setPostbar(String postbar) {
+		this.postbar = postbar == null ? null : postbar.trim();
+	}
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
-    }
+	public String getConcernnum() {
+		return concernnum;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setConcernnum(String concernnum) {
+		this.concernnum = concernnum == null ? null : concernnum.trim();
+	}
 
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
-    }
+	public String getPostnum() {
+		return postnum;
+	}
 
-    public String getPostbar() {
-        return postbar;
-    }
+	public void setPostnum(String postnum) {
+		this.postnum = postnum == null ? null : postnum.trim();
+	}
 
-    public void setPostbar(String postbar) {
-        this.postbar = postbar == null ? null : postbar.trim();
-    }
+	public Date getCreatTime() {
+		return creatTime;
+	}
 
-    public String getConcernnum() {
-        return concernnum;
-    }
-
-    public void setConcernnum(String concernnum) {
-        this.concernnum = concernnum == null ? null : concernnum.trim();
-    }
-
-    public String getPostnum() {
-        return postnum;
-    }
-
-    public void setPostnum(String postnum) {
-        this.postnum = postnum == null ? null : postnum.trim();
-    }
-
-    public Date getCreatTime() {
-        return creatTime;
-    }
-
-    public void setCreatTime(Date creatTime) {
-        this.creatTime = creatTime;
-    }
+	public void setCreatTime(Date creatTime) {
+		this.creatTime = creatTime;
+	}
 }
