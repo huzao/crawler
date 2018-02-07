@@ -8,6 +8,7 @@ import com.dazhumei.love.crawler.GetOnePostBar;
 import com.dazhumei.love.postbar.service.CommentService;
 import com.dazhumei.love.postbar.service.PostBarService;
 import com.dazhumei.love.postbar.service.PostService;
+import com.dazhumei.love.postbar.service.UserService;
 
 @Controller
 @RequestMapping("/controller")
@@ -19,13 +20,16 @@ public class PostBarController {
 	private PostService postService;
 	@Autowired
 	private CommentService commentService;
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping("/beginSelect")
 	@ResponseBody
-	public void beginSelect(){
-		String name="武汉纺织大学";
-		GetOnePostBar.GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name,postBarService,postService,commentService);
-		
+	public String beginSelect(){
+		String postbarname="武汉纺织大学";
+		GetOnePostBar thread1=new GetOnePostBar(postBarService, postService, commentService, userService, postbarname);
+		thread1.start();
+		return "start.............";
 	}
 
 }

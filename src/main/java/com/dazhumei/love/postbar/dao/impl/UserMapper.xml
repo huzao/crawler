@@ -10,12 +10,15 @@
   <sql id="Base_Column_List" >
     id, uname, urank, creat_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  
+  <!-- 查询作者通过作者名字 -->
+  <select id="selectUserByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from p_user
-    where id = #{id,jdbcType=VARCHAR}
+    where uname = #{uname,jdbcType=VARCHAR}
   </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from p_user
     where id = #{id,jdbcType=VARCHAR}
@@ -26,7 +29,9 @@
     values (#{id,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, #{urank,jdbcType=VARCHAR}, 
       #{creatTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.dazhumei.love.postbar.entity.User" >
+  
+  <!-- 添加作者 -->
+  <insert id="insertUser" parameterType="com.dazhumei.love.postbar.entity.User" >
     insert into p_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -57,6 +62,7 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.dazhumei.love.postbar.entity.User" >
     update p_user
     <set >

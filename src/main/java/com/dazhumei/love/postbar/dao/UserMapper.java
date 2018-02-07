@@ -9,9 +9,19 @@ public interface UserMapper {
 
     int insert(User record);
 
-    int insertSelective(User record);
+    /**
+     * 添加作者
+     * @param record
+     * @return
+     */
+    public int insertUser(User user);
 
-    User selectByPrimaryKey(String id);
+    /**
+     * 查询作者通过作者名字
+     * @param id
+     * @return
+     */
+    public User selectUserByUname(String uname);
 
     int updateByPrimaryKeySelective(User record);
 

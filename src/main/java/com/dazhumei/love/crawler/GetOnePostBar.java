@@ -14,22 +14,90 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dazhumei.love.postbar.entity.Comment;
 import com.dazhumei.love.postbar.entity.Post;
 import com.dazhumei.love.postbar.entity.Postbar;
+import com.dazhumei.love.postbar.entity.User;
 import com.dazhumei.love.postbar.service.CommentService;
 import com.dazhumei.love.postbar.service.PostBarService;
 import com.dazhumei.love.postbar.service.PostService;
+import com.dazhumei.love.postbar.service.UserService;
 import com.dazhumei.love.utils.UUIDUtil;
 
 
-public class GetOnePostBar{
+public class GetOnePostBar extends Thread {
 	
-//	public void run(String name) {
-////		String name="武汉纺织大学";
-//		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
-//	}
+	private PostBarService postBarService;
+	private PostService postService;
+	private CommentService commentService;
+	private UserService UserService;
+	private String postbarname;
+	
+	
+	
+	public PostBarService getPostBarService() {
+		return postBarService;
+	}
+
+	public void setPostBarService(PostBarService postBarService) {
+		this.postBarService = postBarService;
+	}
+
+	public PostService getPostService() {
+		return postService;
+	}
+
+	public void setPostService(PostService postService) {
+		this.postService = postService;
+	}
+
+	public CommentService getCommentService() {
+		return commentService;
+	}
+
+	public void setCommentService(CommentService commentService) {
+		this.commentService = commentService;
+	}
+
+	public UserService getUserService() {
+		return UserService;
+	}
+
+	public void setUserService(UserService userService) {
+		UserService = userService;
+	}
+
+	public String getPostbarname() {
+		return postbarname;
+	}
+
+	public void setPostbarname(String postbarname) {
+		this.postbarname = postbarname;
+	}
+	
+	
+
+	public GetOnePostBar(PostBarService postBarService, PostService postService, CommentService commentService,
+			com.dazhumei.love.postbar.service.UserService userService, String postbarname) {
+		super();
+		this.postBarService = postBarService;
+		this.postService = postService;
+		this.commentService = commentService;
+		UserService = userService;
+		this.postbarname = postbarname;
+	}
+	
+	
+
+	public GetOnePostBar() {
+		super();
+	}
+
+	public void run() {
+		GetAllPagePost("http://tieba.baidu.com/f?kw="+postbarname, "/html/"+postbarname+".html",postbarname,postBarService,postService,commentService,UserService);
+	}
 
 	// 将抓取的网页变成html文件，保存在本地
 	public static void SaveHtml(String url, String path) {
@@ -67,7 +135,7 @@ public class GetOnePostBar{
 	}
 	
 	//保存贴吧所以页面，然后解析，然后删除
-	public static void GetAllPagePost(String url, String path,String name,PostBarService postBarService,PostService postService,CommentService commentService){
+	public static void GetAllPagePost(String url, String path,String name,PostBarService postBarService,PostService postService,CommentService commentService,UserService userService){
 		
 		System.out.println("爬取的网址为："+url+",保存在："+path);
 		SaveHtml(url, path);
@@ -103,7 +171,7 @@ public class GetOnePostBar{
 		postbar.setCreatTime(new Date());
 		postBarService.insertPostBar(postbar);
 		//读取一个页面所有帖子简介和所有评论
-		GetOnePagePost(doc,name,barid,postService,commentService);
+		GetOnePagePost(doc,name,barid,postService,commentService,userService);
 		
 		Elements elements=doc.getElementsByClass("last pagination-item ");
 		String element=elements.first().toString();
@@ -127,7 +195,7 @@ public class GetOnePostBar{
 			}
 			
 			//读取一个页面所有帖子简介和所有评论
-			GetOnePagePost(docp,name,barid,postService,commentService);
+			GetOnePagePost(docp,name,barid,postService,commentService,userService);
 			
 			//删除
 			if (filep!=null) {
@@ -143,7 +211,7 @@ public class GetOnePostBar{
 	}
 	
 	//得到一页的所以帖子
-	public static void GetOnePagePost(Document doc,String name,String barid,PostService postService,CommentService commentService){
+	public static void GetOnePagePost(Document doc,String name,String barid,PostService postService,CommentService commentService,UserService userService){
 		//读取一个页面所有帖子简介和所有评论
 		Elements posts=doc.getElementsByClass("t_con cleafix");
 		for (Element element : posts) {
@@ -157,6 +225,15 @@ public class GetOnePostBar{
 			String auth=element.getElementsByClass("tb_icon_author").first().toString();
 			String author=auth.substring(auth.indexOf("title=\"主题作者: ")+13,auth.indexOf("\" data-field"));
 			System.out.println("作者："+author);
+			
+			if (userService.selectUserByUname(author)==null) {
+				User user=new User();
+				user.setId(UUIDUtil.getUUID());
+				user.setUname(author);
+				user.setCreatTime(new Date());
+				userService.insertUser(user);
+			}
+			
 			
 			String creatTime=element.getElementsByClass("pull-right is_show_create_time").first().text();
 			System.out.println("创建时间："+creatTime);
@@ -175,6 +252,15 @@ public class GetOnePostBar{
 				p.setContent(content);
 				p.setLastpeople(lastpeople);
 				p.setLastTime(lastTime);
+				
+				if (userService.selectUserByUname(lastpeople)==null) {
+					User user1=new User();
+					user1.setId(UUIDUtil.getUUID());
+					user1.setUname(lastpeople);
+					user1.setCreatTime(new Date());
+					userService.insertUser(user1);
+				}
+				
 			}
 			
 			String urlstr=element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first().toString();
@@ -219,6 +305,15 @@ public class GetOnePostBar{
 				System.out.println("作者等级："+crank);
 				System.out.println("评论为："+comment);
 				
+				if (userService.selectUserByUname(cauthor)==null) {
+					User user2=new User();
+					user2.setId(UUIDUtil.getUUID());
+					user2.setUname(cauthor);
+					user2.setUrank(crank);
+					user2.setCreatTime(new Date());
+					userService.insertUser(user2);
+				}
+				
 				c.setId(UUIDUtil.getUUID());
 				c.setPostid(pid);
 				c.setCauthor(cauthor);
@@ -257,6 +352,15 @@ public class GetOnePostBar{
 					System.out.println("作者等级："+crank);
 					System.out.println("评论为："+comment);
 					
+					if (userService.selectUserByUname(cauthor)==null) {
+						User user3=new User();
+						user3.setId(UUIDUtil.getUUID());
+						user3.setUname(cauthor);
+						user3.setUrank(crank);
+						user3.setCreatTime(new Date());
+						userService.insertUser(user3);
+					}
+					
 					c.setId(UUIDUtil.getUUID());
 					c.setPostid(pid);
 					c.setCauthor(cauthor);
@@ -279,11 +383,5 @@ public class GetOnePostBar{
 			
 		}
 	}
-
-	
-//	public static void main(String[] args) {
-//		String name="武汉纺织大学";
-//		GetAllPagePost("http://tieba.baidu.com/f?kw="+name, "/html/"+name+".html",name);
-//	}
 	
 }
