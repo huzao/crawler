@@ -262,6 +262,11 @@ public class GetOnePostBar extends Thread {
 
 			if (element.getElementsByClass("icon-top").first() == null) {
 				String content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().text();
+				
+				if (content==null||"".equals(content)) {
+					content=element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().toString();
+				}
+				
 				System.out.println("帖子内容简介为：" + content);
 
 				String last = element.getElementsByClass("threadlist_author pull_right").last().toString();
@@ -326,6 +331,11 @@ public class GetOnePostBar extends Thread {
 				Comment c = new Comment();
 				Element link = element2.getElementsByTag("cc").first();
 				String comment = link.getElementsByTag("div").first().text();
+				
+				if (comment==null||"".equals(comment)) {
+					comment=link.getElementsByTag("div").first().toString();
+				}
+				
 				String cauthor = element2.getElementsByClass("d_badge_title").first().text();
 				String crank = element2.getElementsByClass("d_badge_lv").first().text();
 				System.out.println("作者名字：" + cauthor);
@@ -376,6 +386,11 @@ public class GetOnePostBar extends Thread {
 					Comment c = new Comment();
 					Element link = element3.getElementsByTag("cc").first();
 					String comment = link.getElementsByTag("div").first().text();
+					
+					if (comment==null||"".equals(comment)) {
+						comment=link.getElementsByTag("div").first().toString();
+					}
+					
 					String cauthor = element3.getElementsByClass("d_badge_title").first().text();
 					String crank = element3.getElementsByClass("d_badge_lv").first().text();
 					System.out.println("作者名字：" + cauthor);
