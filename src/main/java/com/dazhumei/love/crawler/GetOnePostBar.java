@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -125,6 +127,8 @@ public class GetOnePostBar extends Thread {
 
 			URL temp = new URL(url);
 			URLConnection uc = temp.openConnection();
+			uc.setConnectTimeout(100000);
+			uc.setReadTimeout(100000); 
 			uc.addRequestProperty("User-Agent",
 					"Mozilla/5.0 (iPad; U; CPU OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5");
 			is = temp.openStream();
@@ -233,6 +237,8 @@ public class GetOnePostBar extends Thread {
 			CommentService commentService, UserService userService) {
 		// 读取一个页面所有帖子简介和所有评论
 		Elements posts = doc.getElementsByClass("t_con cleafix");
+		List<Post> listp=new ArrayList<Post>();
+		List<Comment> listc=new ArrayList<Comment>();
 		for (Element element : posts) {
 
 			Post p = new Post();
@@ -293,8 +299,7 @@ public class GetOnePostBar extends Thread {
 
 			}
 
-			String urlstr = element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first()
-					.toString();
+			String urlstr = element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first().toString();
 			String urlp = urlstr.substring(urlstr.indexOf("href=\"") + 6, urlstr.indexOf("\" title"));
 			System.out.println("帖子的网址为：" + urlp);
 
@@ -306,7 +311,8 @@ public class GetOnePostBar extends Thread {
 			p.setPauthor(author);
 			p.setCreatTime(creatTime);
 			p.setPosturl("http://tieba.baidu.com" + urlp);
-			postService.insertPost(p);
+//			postService.insertPost(p);
+			listp.add(p);
 			System.out.println("开始下载帖子...");
 			// 读取帖子的所以评论
 			SaveHtml(baseurl + urlp, "/html/" + name + urlp.replace("/", "_") + ".html");
@@ -362,7 +368,8 @@ public class GetOnePostBar extends Thread {
 					c.setCarank(crank);
 					c.setCreatTime(new Date());
 					c.setComment(comment);
-					commentService.insertComment(c);
+//					commentService.insertComment(c);
+					listc.add(c);
 				}
 				
 				String pagenum = htmlc.substring(htmlc.indexOf("</span>回复贴，共<span class=\"red\">") + 30,htmlc.indexOf("</span>页</li>"));
@@ -416,7 +423,8 @@ public class GetOnePostBar extends Thread {
 						c.setCarank(crank);
 						c.setCreatTime(new Date());
 						c.setComment(comment);
-						commentService.insertComment(c);
+//						commentService.insertComment(c);
+						listc.add(c);
 					}
 					
 					// 删除
@@ -432,6 +440,9 @@ public class GetOnePostBar extends Thread {
 			}
 
 		}
+		//批量添加
+		postService.insertPostList(listp);
+		commentService.insertCommentList(listc);
 	}
 
 }

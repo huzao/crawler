@@ -18,31 +18,42 @@
 		posturl,posttitle, content
 	</sql>
 
-
-	<!-- <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" 
-		> -->
-	<!-- select -->
-	<!-- <include refid="Base_Column_List" /> -->
-	<!-- , -->
-	<!-- <include refid="Blob_Column_List" /> -->
-	<!-- from p_post -->
-	<!-- where id = #{id,jdbcType=VARCHAR} -->
-	<!-- </select> -->
-	<!-- <delete id="deleteByPrimaryKey" parameterType="java.lang.String" > -->
-	<!-- delete from p_post -->
-	<!-- where id = #{id,jdbcType=VARCHAR} -->
-	<!-- </delete> -->
-	<!-- <insert id="insert" parameterType="com.dazhumei.love.postbar.entity.PostWithBLOBs" 
-		> -->
-	<!-- insert into p_post (id, postbarid, repnum, -->
-	<!-- pauthor, creat_time, lastpeople, -->
-	<!-- last_time, posturl, posttitle, -->
-	<!-- content) -->
-	<!-- values (#{id,jdbcType=VARCHAR}, #{postbarid,jdbcType=VARCHAR}, #{repnum,jdbcType=VARCHAR}, -->
-	<!-- #{pauthor,jdbcType=VARCHAR}, #{creatTime,jdbcType=VARCHAR}, #{lastpeople,jdbcType=VARCHAR}, -->
-	<!-- #{lastTime,jdbcType=VARCHAR}, #{posturl,jdbcType=VARCHAR}, #{posttitle,jdbcType=LONGVARCHAR}, -->
-	<!-- #{content,jdbcType=LONGVARCHAR}) -->
-	<!-- </insert> -->
+	<!-- 查处某个贴吧的所以帖子 -->
+	<select id="selectPostByPostbarid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select
+	<include refid="Base_Column_List" />
+	from p_post
+	where postbarid = #{postbarid,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 删除某个贴吧的所以帖子 -->
+	<delete id="deletePostByPostbarid" parameterType="java.lang.String" >
+	delete from p_post
+	where postbarid = #{postbarid,jdbcType=VARCHAR}
+	</delete>
+	
+<!-- 	<insert id="insert" parameterType="com.dazhumei.love.postbar.entity.PostWithBLOBs"> -->
+<!-- 	insert into p_post (id, postbarid, repnum, -->
+<!-- 	pauthor, creat_time, lastpeople, -->
+<!-- 	last_time, posturl, posttitle, -->
+<!-- 	content) -->
+<!-- 	values (#{id,jdbcType=VARCHAR}, #{postbarid,jdbcType=VARCHAR}, #{repnum,jdbcType=VARCHAR}, -->
+<!-- 	#{pauthor,jdbcType=VARCHAR}, #{creatTime,jdbcType=VARCHAR}, #{lastpeople,jdbcType=VARCHAR}, -->
+<!-- 	#{lastTime,jdbcType=VARCHAR}, #{posturl,jdbcType=VARCHAR}, #{posttitle,jdbcType=LONGVARCHAR}, -->
+<!-- 	#{content,jdbcType=LONGVARCHAR}) -->
+<!-- 	</insert> -->
+	
+	<!-- 批量添加 -->
+	<insert id="insertPostList" parameterType="java.util.List">
+        insert into p_post (id, postbarid, repnum,pauthor, creat_time, lastpeople,last_time, posturl, posttitle,content)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.postbarid,jdbcType=VARCHAR}, #{item.repnum,jdbcType=VARCHAR},
+			#{item.pauthor,jdbcType=VARCHAR}, #{item.creatTime,jdbcType=VARCHAR}, #{item.lastpeople,jdbcType=VARCHAR},
+			#{item.lastTime,jdbcType=VARCHAR}, #{item.posturl,jdbcType=VARCHAR}, #{item.posttitle,jdbcType=LONGVARCHAR},
+			#{item.content,jdbcType=LONGVARCHAR})
+        </foreach>
+    </insert>
 
 	<!-- 添加帖子 -->
 	<insert id="insertPost" parameterType="com.dazhumei.love.postbar.entity.Post">

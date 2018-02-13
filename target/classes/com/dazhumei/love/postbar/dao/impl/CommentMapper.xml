@@ -22,18 +22,39 @@
 <!--     from p_comment -->
 <!--     where id = #{id,jdbcType=VARCHAR} -->
 <!--   </select> -->
-<!--   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" > -->
-<!--     delete from p_comment -->
-<!--     where id = #{id,jdbcType=VARCHAR} -->
-<!--   </delete> -->
-<!--   <insert id="insert" parameterType="com.dazhumei.love.postbar.entity.Comment" > -->
-<!--     insert into p_comment (id, postid, cauthor,  -->
-<!--       carank, creat_time, comment -->
-<!--       ) -->
-<!--     values (#{id,jdbcType=VARCHAR}, #{postid,jdbcType=VARCHAR}, #{cauthor,jdbcType=VARCHAR},  -->
-<!--       #{carank,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=LONGVARCHAR} -->
-<!--       ) -->
-<!--   </insert> -->
+
+		<!-- 删除对应帖子的评论 -->
+	  <delete id="deleteCommentByPostid" parameterType="java.lang.String" >
+	    delete from p_comment
+	    where postid = #{postid,jdbcType=VARCHAR}
+	  </delete>
+	  
+	  <!-- 批量删除对应帖子的评论 - -->
+	  <delete id="deleteCommentsByPostid" parameterType="java.lang.String">
+        delete from p_comment where postid in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.id}
+    	</foreach>
+    </delete>
+	  
+  <insert id="insert" parameterType="com.dazhumei.love.postbar.entity.Comment" >
+    insert into p_comment (id, postid, cauthor, 
+      carank, creat_time, comment
+      )
+    values (#{id,jdbcType=VARCHAR}, #{postid,jdbcType=VARCHAR}, #{cauthor,jdbcType=VARCHAR}, 
+      #{carank,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{comment,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  
+  	<!-- 批量添加 -->
+	<insert id="insertCommentList" parameterType="java.util.List">
+        insert into p_comment (id, postid, cauthor, carank, creat_time, comment)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.postid,jdbcType=VARCHAR}, #{item.cauthor,jdbcType=VARCHAR}, 
+      		#{item.carank,jdbcType=VARCHAR}, #{item.creatTime,jdbcType=TIMESTAMP}, #{item.comment,jdbcType=LONGVARCHAR})
+        </foreach>
+    </insert>
 
 		<!-- 添加评论 -->
 	  <insert id="insertComment" parameterType="com.dazhumei.love.postbar.entity.Comment" >
