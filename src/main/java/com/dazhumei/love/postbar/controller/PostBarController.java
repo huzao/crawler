@@ -1,14 +1,11 @@
 package com.dazhumei.love.postbar.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dazhumei.love.crawler.GetOnePostBar;
-import com.dazhumei.love.postbar.entity.Post;
 import com.dazhumei.love.postbar.service.CommentService;
 import com.dazhumei.love.postbar.service.PostBarService;
 import com.dazhumei.love.postbar.service.PostService;
@@ -27,6 +24,10 @@ public class PostBarController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * 开启所以线程
+	 * @return
+	 */
 	@RequestMapping("/beginSelect")
 	@ResponseBody
 	public String beginSelect() {
@@ -68,6 +69,23 @@ public class PostBarController {
 		GetOnePostBar thread7 = new GetOnePostBar(postBarService, postService, commentService, userService, name7, url7,baseurl2);
 		thread7.start();
 		System.out.println("线程七开启...");
+		return "start.............";
+	}
+	
+	/**
+	 * 开启单个线程
+	 * @param baseurl
+	 * @param name
+	 * @param url
+	 * @return
+	 */
+	@RequestMapping("/beginOneSelect")
+	@ResponseBody
+	public String beginOneSelect(String baseurl,String name,String url) {
+		String url1 = baseurl+"/f?kw=" + name;
+		GetOnePostBar thread = new GetOnePostBar(postBarService, postService, commentService, userService, name, url1,baseurl);
+		thread.start();
+		System.out.println("线程一开启...");
 		return "start.............";
 	}
 
