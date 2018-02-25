@@ -15,7 +15,7 @@ public class DownloadResources {
      */  
     public static void main(String[] args) throws Exception {  
         // TODO Auto-generated method stub  
-         download("http://avatar.csdn.net/1/3/B/1_li1325169021.jpg", "1_li1325169021.jpg","e:\\image\\");  
+         download("http://b363.photo.store.qq.com/psb?/V13iq0v74fH1bG/Ctmj.x9SB6qTlU6qQVENI.CpG2TAjnh0aBPwgx0KneE!/m/dGsBAAAAAAAAnull&bo=gAKAAoACgAIRBzA!&rf=photolist&t=5", "1_li1325169021.jpg","e:\\image\\");  
     }  
       
     public static void download(String urlString, String filename,String savePath) throws Exception {  

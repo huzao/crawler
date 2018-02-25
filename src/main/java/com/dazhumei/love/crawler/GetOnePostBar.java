@@ -332,7 +332,27 @@ public class GetOnePostBar extends Thread {
 			String htmlc = docc.toString();
 			
 			//如果帖子有评论就读
-			if (docc.getElementsByClass("l_post j_l_post l_post_bright  ").size()!=0) {
+			if (docc.getElementsByClass("l_post l_post_bright j_l_post clearfix  ").size()==0) {
+				// 读取第一条评论
+				Element commontf = docc.getElementById("j_p_postlist");
+				Element flink = commontf.getElementsByTag("cc").first();
+				String fcomment = flink.getElementsByTag("div").first().text();
+				
+				if (fcomment==null||"".equals(fcomment)) {
+					fcomment=flink.getElementsByTag("div").first().toString();
+				}
+				
+				String fcauthor =commontf.getElementsByClass("p_author_name j_user_card").first().text();
+				String fcrank =commontf.getElementsByClass("d_badge_lv").first().text();
+				Comment cf = new Comment();
+				cf.setId(UUIDUtil.getUUID());
+				cf.setPostid(pid);
+				cf.setCauthor(fcauthor);
+				cf.setCarank(fcrank);
+				cf.setCreatTime(new Date());
+				cf.setComment(fcomment);
+				listc.add(cf);
+				
 				// 读取第一页评论
 				Elements commonts = docc.getElementsByClass("l_post j_l_post l_post_bright  ");
 				System.out.println(commonts.size());
@@ -344,8 +364,7 @@ public class GetOnePostBar extends Thread {
 					if (comment==null||"".equals(comment)) {
 						comment=link.getElementsByTag("div").first().toString();
 					}
-					
-					String cauthor = element2.getElementsByClass("d_badge_title").first().text();
+					String cauthor = element2.getElementsByClass("d_name").first().getElementsByTag("a").first().text();
 					String crank = element2.getElementsByClass("d_badge_lv").first().text();
 					System.out.println("作者名字：" + cauthor);
 					System.out.println("作者等级：" + crank);
@@ -400,7 +419,107 @@ public class GetOnePostBar extends Thread {
 							comment=link.getElementsByTag("div").first().toString();
 						}
 						
-						String cauthor = element3.getElementsByClass("d_badge_title").first().text();
+						String cauthor = element3.getElementsByClass("d_name").first().getElementsByTag("a").first().text();
+						String crank = element3.getElementsByClass("d_badge_lv").first().text();
+						System.out.println("作者名字：" + cauthor);
+						System.out.println("作者等级：" + crank);
+						System.out.println("评论为：" + comment);
+						System.out.println(obj);
+						synchronized (obj) {
+							if (userService.selectUserByUname(cauthor) == null) {
+								User user3 = new User();
+								user3.setId(UUIDUtil.getUUID());
+								user3.setUname(cauthor);
+								user3.setUrank(crank);
+								user3.setCreatTime(new Date());
+								userService.insertUser(user3);
+							}
+						}
+						
+						c.setId(UUIDUtil.getUUID());
+						c.setPostid(pid);
+						c.setCauthor(cauthor);
+						c.setCarank(crank);
+						c.setCreatTime(new Date());
+						c.setComment(comment);
+//						commentService.insertComment(c);
+						listc.add(c);
+					}
+					
+					// 删除
+					if (filecc != null) {
+						filecc.delete();
+					}
+				}
+			}else {
+				// 读取第一页评论
+				Elements commonts = docc.getElementsByClass("l_post l_post_bright j_l_post clearfix  ");
+				System.out.println(commonts.size());
+				for (Element element2 : commonts) {
+					Comment c = new Comment();
+					Element link = element2.getElementsByTag("cc").first();
+					String comment = link.getElementsByTag("div").first().text();
+					
+					if (comment==null||"".equals(comment)) {
+						comment=link.getElementsByTag("div").first().toString();
+					}
+					
+					String cauthor = element2.getElementsByClass("d_name").first().getElementsByTag("a").first().text();
+					String crank = element2.getElementsByClass("d_badge_lv").first().text();
+					System.out.println("作者名字：" + cauthor);
+					System.out.println("作者等级：" + crank);
+					System.out.println("评论为：" + comment);
+					System.out.println(obj);
+					synchronized (obj) {
+						if (userService.selectUserByUname(cauthor) == null) {
+							User user2 = new User();
+							user2.setId(UUIDUtil.getUUID());
+							user2.setUname(cauthor);
+							user2.setUrank(crank);
+							user2.setCreatTime(new Date());
+							userService.insertUser(user2);
+						}
+					}
+					
+					c.setId(UUIDUtil.getUUID());
+					c.setPostid(pid);
+					c.setCauthor(cauthor);
+					c.setCarank(crank);
+					c.setCreatTime(new Date());
+					c.setComment(comment);
+//					commentService.insertComment(c);
+					listc.add(c);
+				}
+				
+				String pagenum = htmlc.substring(htmlc.indexOf("</span>回复贴，共<span class=\"red\">") + 30,htmlc.indexOf("</span>页</li>"));
+				System.out.println("第" + name + urlp.replace("/", "_") + ".html页面有" + pagenum + "页");
+				int pages = Integer.valueOf(pagenum);
+				// 读取其它评论
+				for (int num = 2; num <= pages; num++) {
+					System.out.println("开始读取" + "第" + name + urlp.replace("/", "_") + ".html页面的第" + num + "页");
+					SaveHtml(baseurl + urlp + "?pn=" + num, "/html/" + name + urlp.replace("/", "_") + "_" + num + ".html");
+					File filecc = new File("/html/" + name + urlp.replace("/", "_") + "_" + num + ".html");
+					// 读取评论
+					Document doccc;
+					try {
+						doccc = Jsoup.parse(filecc, "UTF-8");
+					} catch (IOException e) {
+						System.out.println("第" + name + urlp.replace("/", "_") + "_" + num + ".html页面出错");
+						e.printStackTrace();
+						continue;
+					}
+					
+					Elements commontss = doccc.getElementsByClass("l_post j_l_post l_post_bright  ");
+					for (Element element3 : commontss) {
+						Comment c = new Comment();
+						Element link = element3.getElementsByTag("cc").first();
+						String comment = link.getElementsByTag("div").first().text();
+						
+						if (comment==null||"".equals(comment)) {
+							comment=link.getElementsByTag("div").first().toString();
+						}
+						
+						String cauthor = element3.getElementsByClass("d_name").first().getElementsByTag("a").first().text();
 						String crank = element3.getElementsByClass("d_badge_lv").first().text();
 						System.out.println("作者名字：" + cauthor);
 						System.out.println("作者等级：" + crank);
@@ -441,8 +560,12 @@ public class GetOnePostBar extends Thread {
 
 		}
 		//批量添加
-		postService.insertPostList(listp);
-		commentService.insertCommentList(listc);
+		if (listp.size()>0) {
+			postService.insertPostList(listp);
+		}
+		if (listc.size()>0) {
+			commentService.insertCommentList(listc);
+		}
 	}
 
 }

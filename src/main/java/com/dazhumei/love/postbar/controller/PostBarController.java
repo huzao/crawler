@@ -81,11 +81,13 @@ public class PostBarController {
 	 */
 	@RequestMapping("/beginOneSelect")
 	@ResponseBody
-	public String beginOneSelect(String baseurl,String name,String url) {
-		String url1 = baseurl+"/f?kw=" + name;
-		GetOnePostBar thread = new GetOnePostBar(postBarService, postService, commentService, userService, name, url1,baseurl);
-		thread.start();
-		System.out.println("线程一开启...");
+	public String beginOneSelect(String baseurl,String name) {
+		String baseurl1 = "http://tieba.baidu.com";
+
+		String name1 = "武汉纺织大学";
+		String url1 = "http://tieba.baidu.com/f?kw=" + name1;
+		GetOnePostBar thread1 = new GetOnePostBar(postBarService, postService, commentService, userService, name1, url1,baseurl1);
+		thread1.start();
 		return "start.............";
 	}
 
