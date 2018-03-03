@@ -1,25 +1,28 @@
 package com.dazhumei.love.test;
 
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Test {
 
-	public static void main(String[] args) throws SQLException{
-		for(int i=119;i<255;i++){
-			for(int l=23;l<255;l++){
-				for(int m=31;m<255;m++){
-					for(int n=100;n<255;n++){
-						StringBuffer ip=new StringBuffer();
-						ip.append(i).append(",").append(l).append(",").append(m).append(",").append(n);
-						getConnect(ip.toString());
-						System.out.println(ip.toString()+"连不上。。。");
-					}
-				}
-			}
-		}
-	}
+//	public static void main(String[] args) throws SQLException{
+//		for(int i=119;i<255;i++){
+//			for(int l=23;l<255;l++){
+//				for(int m=31;m<255;m++){
+//					for(int n=100;n<255;n++){
+//						StringBuffer ip=new StringBuffer();
+//						ip.append(i).append(",").append(l).append(",").append(m).append(",").append(n);
+//						getConnect(ip.toString());
+//						System.out.println(ip.toString()+"连不上。。。");
+//					}
+//				}
+//			}
+//		}
+//	}3976
 	
 	public static void getConnect(String ip) throws SQLException {
 		Connection con = null;

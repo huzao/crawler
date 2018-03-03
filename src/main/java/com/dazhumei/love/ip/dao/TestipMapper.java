@@ -1,5 +1,7 @@
 package com.dazhumei.love.ip.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.dazhumei.love.ip.entity.Testip;
@@ -15,6 +17,13 @@ public interface TestipMapper {
      * @return
      */
     public int addTestip(Testip testip);
+    
+    /**
+     * 批量添加
+     * @param list
+     * @return
+     */
+    public int addTestipList(List<Testip> list);
 
     Testip selectByPrimaryKey(Integer id);
 

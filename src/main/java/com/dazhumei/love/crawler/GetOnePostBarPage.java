@@ -189,33 +189,9 @@ public class GetOnePostBarPage extends Thread {
 			PostBarService postBarService, PostService postService, CommentService commentService,
 			UserService userService) {
 
-		System.out.println("爬取的网址为：" + url + ",保存在：" + path);
-		SaveHtml(url, path);
-		System.out.println("贴吧网页下载成功");
-
-		System.out.println("开始解析贴吧：" + url);
-		File file = new File(path);
-		// 下面开始解析本地的html
-		Document doc = null;
-		try {
-			doc = Jsoup.parse(file, "UTF-8");
-		} catch (IOException e) {
-			System.out.println("解析出错");
-			e.printStackTrace();
-		}
-		Postbar postbar = new Postbar();
-		postbar.setId(barid);
-
-		Elements elements = doc.getElementsByClass("last pagination-item ");
-		String element = elements.first().toString();
-		String pagestr = element.substring(element.indexOf("pn=") + 3, element.indexOf("class") - 2);
-		int pagenum = Integer.valueOf(pagestr);
-		System.out.println(name + "贴吧共有 " + (pagenum / 50 + 1) + " 页");
-		int intend=pagenum/50;
-		if(end<intend){
-			intend=end;
-		}
-		for (int i = sta; i <= intend; i++) {
+//		Postbar postbar = new Postbar();
+//		postbar.setId(barid);
+		for (int i = sta; i <= end; i++) {
 			int page = i + 1;
 			System.out.println("开始下载" + name + "贴吧的第" + page + "页");
 			SaveHtml(url + "&pn=" + i * 50, "/html/" + name + "_" + page + ".html");
@@ -241,12 +217,8 @@ public class GetOnePostBarPage extends Thread {
 			}
 		}
 
-		// 删除
-		if (file != null) {
-			file.delete();
-		}
-		postbar.setIsFinish("完成");
-		postBarService.updatePostbar(postbar);
+//		postbar.setIsFinish("完成");
+//		postBarService.updatePostbar(postbar);
 
 	}
 

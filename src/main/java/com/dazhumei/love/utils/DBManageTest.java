@@ -13,7 +13,7 @@ public class DBManageTest {
 	public static void testipBegain(TestipService testipService) throws SQLException{
 		for(int i=1;i<255;i++){
 			for(int l=1;l<255;l++){
-				for(int m=1;m<255;m++){
+				for(int m=2;m<255;m++){
 					for(int n=1;n<255;n++){
 						StringBuffer ip=new StringBuffer();
 						ip.append(i).append(",").append(l).append(",").append(m).append(",").append(n);

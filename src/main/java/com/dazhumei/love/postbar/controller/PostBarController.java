@@ -104,5 +104,20 @@ public class PostBarController {
 		thread.start();
 		return "start.............";
 	}
+	
+	/**
+	 * 从某页开始爬取
+	 * @param baseurl
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping("/beginSelectOneBarFromTest")
+	@ResponseBody
+	public String beginSelectOneBarFromTest(Integer sta,Integer end,String name,String baseurl,String barid) {
+		String url = baseurl+"/f?kw="+name;
+		GetOnePostBarPage thread = new GetOnePostBarPage(postBarService, postService, commentService, userService, name, url,baseurl,sta,end,barid);
+		thread.start();
+		return "start.............";
+	}
 
 }
