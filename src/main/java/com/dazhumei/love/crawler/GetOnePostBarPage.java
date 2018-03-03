@@ -27,7 +27,7 @@ import com.dazhumei.love.postbar.service.PostService;
 import com.dazhumei.love.postbar.service.UserService;
 import com.dazhumei.love.utils.UUIDUtil;
 
-public class GetOnePostBar extends Thread {
+public class GetOnePostBarPage extends Thread {
 
 	private PostBarService postBarService;
 	private PostService postService;
@@ -36,6 +36,35 @@ public class GetOnePostBar extends Thread {
 	private String postbarname;
 	private String url;
 	private String baseurl;
+	private int sta; 
+	private int end; 
+	private String barid;
+	
+
+	
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	public String getBarid() {
+		return barid;
+	}
+
+	public void setBarid(String barid) {
+		this.barid = barid;
+	}
+
+	public int getSta() {
+		return sta;
+	}
+
+	public void setSta(int sta) {
+		this.sta = sta;
+	}
 
 	public String getBaseurl() {
 		return baseurl;
@@ -93,8 +122,8 @@ public class GetOnePostBar extends Thread {
 		this.url = url;
 	}
 
-	public GetOnePostBar(PostBarService postBarService, PostService postService, CommentService commentService,
-			UserService userService, String postbarname, String url, String baseurl) {
+	public GetOnePostBarPage(PostBarService postBarService, PostService postService, CommentService commentService,
+			UserService userService, String postbarname, String url, String baseurl,int sta,int end,String barid) {
 		super();
 		this.postBarService = postBarService;
 		this.postService = postService;
@@ -103,16 +132,17 @@ public class GetOnePostBar extends Thread {
 		this.postbarname = postbarname;
 		this.url = url;
 		this.baseurl = baseurl;
+		this.sta = sta;
+		this.end = end;
+		this.barid = barid;
 	}
 
-	public GetOnePostBar() {
+	public GetOnePostBarPage() {
 		super();
 	}
 
-	// static Object obj = new Object();
-
 	public void run() {
-		GetAllPagePost(baseurl, url, "/html/" + postbarname + ".html", postbarname, postBarService, postService,
+		GetAllPagePost(barid,sta,end,baseurl, url, "/html/" + postbarname + ".html", postbarname, postBarService, postService,
 				commentService, userService);
 	}
 
@@ -155,7 +185,7 @@ public class GetOnePostBar extends Thread {
 	}
 
 	// 保存贴吧所以页面，然后解析，然后删除
-	public static void GetAllPagePost(String baseurl, String url, String path, String name,
+	public static void GetAllPagePost(String barid,int sta,int end,String baseurl, String url, String path, String name,
 			PostBarService postBarService, PostService postService, CommentService commentService,
 			UserService userService) {
 
@@ -174,34 +204,18 @@ public class GetOnePostBar extends Thread {
 			e.printStackTrace();
 		}
 		Postbar postbar = new Postbar();
-		Elements titles = doc.getElementsByTag("title");
-		String title = titles.first().text();
-		String tieba = title.substring(0, title.indexOf("-"));
-		String menNum = doc.getElementsByClass("card_menNum").first().text();
-		String infoNum = doc.getElementsByClass("card_infoNum").first().text();
-		System.out.println("标题：" + title);
-		System.out.println("贴吧：" + tieba);
-		System.out.println("关注人数：" + menNum);
-		System.out.println("帖子数：" + infoNum);
-
-		String barid = UUIDUtil.getUUID();
 		postbar.setId(barid);
-		postbar.setTitle(title);
-		postbar.setPostbar(tieba);
-		postbar.setConcernnum(menNum);
-		postbar.setPostnum(infoNum);
-		postbar.setIsFinish("开始读取");
-		postbar.setCreatTime(new Date());
-		postBarService.insertPostBar(postbar);
-		// 读取一个页面所有帖子简介和所有评论
-		GetOnePagePost(baseurl, doc, name, barid, postService, commentService, userService);
 
 		Elements elements = doc.getElementsByClass("last pagination-item ");
 		String element = elements.first().toString();
 		String pagestr = element.substring(element.indexOf("pn=") + 3, element.indexOf("class") - 2);
 		int pagenum = Integer.valueOf(pagestr);
 		System.out.println(name + "贴吧共有 " + (pagenum / 50 + 1) + " 页");
-		for (int i = 1; i <= pagenum / 50; i++) {
+		int intend=pagenum/50;
+		if(end<intend){
+			intend=end;
+		}
+		for (int i = sta; i <= intend; i++) {
 			int page = i + 1;
 			System.out.println("开始下载" + name + "贴吧的第" + page + "页");
 			SaveHtml(url + "&pn=" + i * 50, "/html/" + name + "_" + page + ".html");
@@ -256,27 +270,22 @@ public class GetOnePostBar extends Thread {
 			String auth = element.getElementsByClass("tb_icon_author").first().toString();
 			String author = auth.substring(auth.indexOf("title=\"主题作者: ") + 13, auth.indexOf("\" data-field"));
 			System.out.println("作者：" + author);
-			// System.out.println(obj);
-			// synchronized (obj) {
-			// if (userService.selectUserByUname(author) == null) {
 			User user = new User();
 			user.setId(UUIDUtil.getUUID());
 			user.setUname(author);
 			user.setCreatTime(new Date());
 			listu.add(user);
-			// userService.insertUser(user);
-			// }
-			// }
 
 			String creatTime = element.getElementsByClass("pull-right is_show_create_time").first().text();
 			System.out.println("创建时间：" + creatTime);
 
 			if (element.getElementsByClass("icon-top").first() == null) {
 				String content=null;
+				
 				if(element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ")==null){
 					content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").first().text();
 					if (content == null || "".equals(content)) {
-						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").first().toString();
+						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().toString();
 					}
 				}else{
 					content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().text();
@@ -300,18 +309,11 @@ public class GetOnePostBar extends Thread {
 				p.setContent(content);
 				p.setLastpeople(lastpeople);
 				p.setLastTime(lastTime);
-				// System.out.println(obj);
-				// synchronized (obj) {
-				// if (userService.selectUserByUname(lastpeople) == null) {
 				User user1 = new User();
 				user1.setId(UUIDUtil.getUUID());
 				user1.setUname(lastpeople);
 				user1.setCreatTime(new Date());
 				listu.add(user1);
-				// userService.insertUser(user1);
-				// }
-				// }
-
 			}
 
 			String urlstr = element.getElementsByClass("threadlist_lz clearfix").first().getElementsByTag("a").first()
@@ -366,18 +368,12 @@ public class GetOnePostBar extends Thread {
 					System.out.println("作者名字：" + cauthor);
 					System.out.println("作者等级：" + crank);
 					System.out.println("评论为：" + comment);
-					// System.out.println(obj);
-					// synchronized (obj) {
-					// if (userService.selectUserByUname(cauthor) == null) {
 					User user2 = new User();
 					user2.setId(UUIDUtil.getUUID());
 					user2.setUname(cauthor);
 					user2.setUrank(crank);
 					user2.setCreatTime(new Date());
 					listu.add(user2);
-					// userService.insertUser(user2);
-					// }
-					// }
 
 					c.setId(UUIDUtil.getUUID());
 					c.setPostid(pid);
@@ -385,7 +381,6 @@ public class GetOnePostBar extends Thread {
 					c.setCarank(crank);
 					c.setCreatTime(new Date());
 					c.setComment(comment);
-					// commentService.insertComment(c);
 					listc.add(c);
 				}
 
@@ -425,18 +420,12 @@ public class GetOnePostBar extends Thread {
 						System.out.println("作者名字：" + cauthor);
 						System.out.println("作者等级：" + crank);
 						System.out.println("评论为：" + comment);
-						// System.out.println(obj);
-						// synchronized (obj) {
-						// if (userService.selectUserByUname(cauthor) == null) {
 						User user3 = new User();
 						user3.setId(UUIDUtil.getUUID());
 						user3.setUname(cauthor);
 						user3.setUrank(crank);
 						user3.setCreatTime(new Date());
 						listu.add(user3);
-						// userService.insertUser(user3);
-						// }
-						// }
 
 						c.setId(UUIDUtil.getUUID());
 						c.setPostid(pid);
@@ -444,7 +433,6 @@ public class GetOnePostBar extends Thread {
 						c.setCarank(crank);
 						c.setCreatTime(new Date());
 						c.setComment(comment);
-						// commentService.insertComment(c);
 						listc.add(c);
 					}
 
@@ -490,18 +478,12 @@ public class GetOnePostBar extends Thread {
 					System.out.println("作者名字：" + cauthor);
 					System.out.println("作者等级：" + crank);
 					System.out.println("评论为：" + comment);
-					// System.out.println(obj);
-					// synchronized (obj) {
-					// if (userService.selectUserByUname(cauthor) == null) {
 					User user2 = new User();
 					user2.setId(UUIDUtil.getUUID());
 					user2.setUname(cauthor);
 					user2.setUrank(crank);
 					user2.setCreatTime(new Date());
 					listu.add(user2);
-					// userService.insertUser(user2);
-					// }
-					// }
 
 					c.setId(UUIDUtil.getUUID());
 					c.setPostid(pid);
@@ -509,7 +491,6 @@ public class GetOnePostBar extends Thread {
 					c.setCarank(crank);
 					c.setCreatTime(new Date());
 					c.setComment(comment);
-					// commentService.insertComment(c);
 					listc.add(c);
 				}
 
@@ -549,18 +530,12 @@ public class GetOnePostBar extends Thread {
 						System.out.println("作者名字：" + cauthor);
 						System.out.println("作者等级：" + crank);
 						System.out.println("评论为：" + comment);
-						// System.out.println(obj);
-						// synchronized (obj) {
-						// if (userService.selectUserByUname(cauthor) == null) {
 						User user3 = new User();
 						user3.setId(UUIDUtil.getUUID());
 						user3.setUname(cauthor);
 						user3.setUrank(crank);
 						user3.setCreatTime(new Date());
 						listu.add(user3);
-						// userService.insertUser(user3);
-						// }
-						// }
 
 						c.setId(UUIDUtil.getUUID());
 						c.setPostid(pid);
@@ -568,7 +543,6 @@ public class GetOnePostBar extends Thread {
 						c.setCarank(crank);
 						c.setCreatTime(new Date());
 						c.setComment(comment);
-						// commentService.insertComment(c);
 						listc.add(c);
 					}
 

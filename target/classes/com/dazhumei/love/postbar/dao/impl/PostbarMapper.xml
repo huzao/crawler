@@ -7,10 +7,11 @@
     <result column="postbar" property="postbar" jdbcType="VARCHAR" />
     <result column="concernnum" property="concernnum" jdbcType="VARCHAR" />
     <result column="postnum" property="postnum" jdbcType="VARCHAR" />
+    <result column="isFinish" property="isFinish" jdbcType="VARCHAR" />
     <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, postbar, concernnum, postnum, creat_time
+    id, title, postbar, concernnum, postnum, isFinish, creat_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -50,6 +51,9 @@
       <if test="postnum != null" >
         postnum,
       </if>
+      <if test="isFinish != null" >
+        isFinish,
+      </if>
       <if test="creatTime != null" >
         creat_time,
       </if>
@@ -69,6 +73,9 @@
       </if>
       <if test="postnum != null" >
         #{postnum,jdbcType=VARCHAR},
+      </if>
+      <if test="isFinish != null" >
+        #{isFinish,jdbcType=VARCHAR},
       </if>
       <if test="creatTime != null" >
         #{creatTime,jdbcType=TIMESTAMP},
@@ -91,19 +98,20 @@
       <if test="postnum != null" >
         postnum = #{postnum,jdbcType=VARCHAR},
       </if>
+      <if test="isFinish != null" >
+        isFinish = #{isFinish,jdbcType=VARCHAR},
+      </if>
       <if test="creatTime != null" >
         creat_time = #{creatTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.dazhumei.love.postbar.entity.Postbar" >
+  
+  <!-- 完成 -->
+  <update id="updatePostbar" parameterType="com.dazhumei.love.postbar.entity.Postbar" >
     update p_postbar
-    set title = #{title,jdbcType=VARCHAR},
-      postbar = #{postbar,jdbcType=VARCHAR},
-      concernnum = #{concernnum,jdbcType=VARCHAR},
-      postnum = #{postnum,jdbcType=VARCHAR},
-      creat_time = #{creatTime,jdbcType=TIMESTAMP}
+    set isFinish = #{isFinish,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

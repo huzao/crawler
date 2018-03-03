@@ -19,6 +19,15 @@
     where uname = #{uname,jdbcType=VARCHAR}
   </select>
   
+  <!-- 批量添加 -->
+	<insert id="insertUserList" parameterType="java.util.List">
+        insert into p_user (id, uname, urank, creat_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.uname,jdbcType=VARCHAR}, #{item.urank,jdbcType=VARCHAR}, #{item.creatTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from p_user
     where id = #{id,jdbcType=VARCHAR}

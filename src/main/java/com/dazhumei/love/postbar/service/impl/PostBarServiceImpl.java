@@ -19,4 +19,9 @@ public class PostBarServiceImpl implements PostBarService{
 		return postbarDao.insertPostBar(postbar);
 	}
 
+	@Override
+	public int updatePostbar(Postbar postbar) {
+		return postbarDao.updatePostbar(postbar);
+	}
+
 }

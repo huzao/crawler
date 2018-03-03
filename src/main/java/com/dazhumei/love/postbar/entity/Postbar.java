@@ -14,6 +14,19 @@ public class Postbar {
 	private String postnum;
 	//创建时间
 	private Date creatTime;
+	//完成
+	private String isFinish;
+
+	
+	
+	
+	public String getIsFinish() {
+		return isFinish;
+	}
+
+	public void setIsFinish(String isFinish) {
+		this.isFinish = isFinish;
+	}
 
 	public String getId() {
 		return id;

@@ -1,5 +1,7 @@
 package com.dazhumei.love.postbar.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.dazhumei.love.postbar.entity.User;
@@ -22,6 +24,13 @@ public interface UserMapper {
      * @return
      */
     public User selectUserByUname(String uname);
+    
+    /**
+   	 * 批量添加
+   	 * @param list
+   	 * @return
+   	 */
+   	public int insertUserList(List<User> list);
 
     int updateByPrimaryKeySelective(User record);
 

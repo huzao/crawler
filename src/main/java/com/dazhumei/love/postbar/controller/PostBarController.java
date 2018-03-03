@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dazhumei.love.crawler.GetOnePostBar;
+import com.dazhumei.love.crawler.GetOnePostBarPage;
 import com.dazhumei.love.postbar.service.CommentService;
 import com.dazhumei.love.postbar.service.PostBarService;
 import com.dazhumei.love.postbar.service.PostService;
@@ -82,12 +83,25 @@ public class PostBarController {
 	@RequestMapping("/beginOneSelect")
 	@ResponseBody
 	public String beginOneSelect(String baseurl,String name) {
-		String baseurl1 = "http://tieba.baidu.com";
-
-		String name1 = "武汉纺织大学";
-		String url1 = "http://tieba.baidu.com/f?kw=" + name1;
-		GetOnePostBar thread1 = new GetOnePostBar(postBarService, postService, commentService, userService, name1, url1,baseurl1);
-		thread1.start();
+		String url = baseurl+"/f?kw=" + name;
+		GetOnePostBar thread = new GetOnePostBar(postBarService, postService, commentService, userService, name, url,baseurl);
+		thread.start();
+		return "start.............";
+	}
+	
+	
+	/**
+	 * 从某页开始爬取
+	 * @param baseurl
+	 * @param name
+	 * @return
+	 */
+	@RequestMapping("/beginSelectOneBarFrom")
+	@ResponseBody
+	public String beginSelectOneBarFrom(String baseurl,String name,Integer sta,Integer end,String barid) {
+		String url = baseurl+"/f?kw=" + name;
+		GetOnePostBarPage thread = new GetOnePostBarPage(postBarService, postService, commentService, userService, name, url,baseurl,sta,end,barid);
+		thread.start();
 		return "start.............";
 	}
 

@@ -1,5 +1,7 @@
 package com.dazhumei.love.postbar.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User selectUserByUname(String uname) {
 		return userDao.selectUserByUname(uname);
+	}
+
+	@Override
+	public int insertUserList(List<User> list) {
+		return userDao.insertUserList(list);
 	}
 
 }

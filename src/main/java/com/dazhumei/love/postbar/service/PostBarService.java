@@ -12,5 +12,7 @@ public interface PostBarService {
 	 * @return
 	 */
 	int insertPostBar(Postbar postbar);
+	
+	int updatePostbar(Postbar postbar);
 
 }

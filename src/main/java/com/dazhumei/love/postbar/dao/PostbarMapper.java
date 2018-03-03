@@ -23,5 +23,5 @@ public interface PostbarMapper {
 
 	int updateByPrimaryKeySelective(Postbar record);
 
-	int updateByPrimaryKey(Postbar record);
+	int updatePostbar(Postbar postbar);
 }
