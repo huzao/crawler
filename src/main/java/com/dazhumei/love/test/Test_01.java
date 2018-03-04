@@ -10,15 +10,15 @@ public class Test_01 {
 	
 	public static void main(String[] args) throws IOException {
 		for(int i=298;i<=560;i=i+10){
-			int sta=438;
-			int end=447;
-			if((i+9)>560){
-				end=560;
-			}else {
-				end=i+9;
-			}
+			int sta=408;
+			int end=417;
+//			if((i+9)>560){
+//				end=560;
+//			}else {
+//				end=i+9;
+//			}408
+//			System.out.println("http://119.23.31.208:8080/crawler/controller/beginSelectOneBarFromTest?sta="+sta+"&end="+end+"&name=武汉纺织大学外经贸学院"+"&baseurl=http://tieba.baidu.com"+"&barid=AD9596A7C9504B828B662FC5A7E6CDDD");
 			try {
-//				URL temp = new URL("http://localhost:8080/crawler/controller/beginSelectOneBarFromTest?sta="+sta+"&end="+end+"&name=武汉纺织大学外经贸学院"+"&baseurl=baseurl1"+"&barid=AD9596A7C9504B828B662FC5A7E6CDDD");
 				URL temp = new URL("http://119.23.31.208:8080/crawler/controller/beginSelectOneBarFromTest");
 				
 				HttpURLConnection connection=(HttpURLConnection) temp.openConnection();
@@ -52,16 +52,6 @@ public class Test_01 {
 	            if (responseCode == 200) {
 	            	System.out.println("http://119.23.31.208:8080/crawler/controller/beginSelectOneBarFromTest?sta="+sta+"&end="+end+"&name=武汉纺织大学外经贸学院"+"&baseurl=http://tieba.baidu.com"+"&barid=AD9596A7C9504B828B662FC5A7E6CDDD");
 	            }
-
-//				URLConnection uc = temp.openConnection();
-//				uc.setConnectTimeout(10000);
-//				uc.setReadTimeout(10000);
-//				uc.setDoInput (true);
-//				uc.setDoOutput(true);
-//				uc.setRequestMethod("POST");
-//				uc.addRequestProperty("User-Agent",
-//						"Mozilla/5.0 (iPad; U; CPU OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5");
-//				temp.openStream();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -19,7 +19,6 @@ import org.jsoup.select.Elements;
 
 import com.dazhumei.love.postbar.entity.Comment;
 import com.dazhumei.love.postbar.entity.Post;
-import com.dazhumei.love.postbar.entity.Postbar;
 import com.dazhumei.love.postbar.entity.User;
 import com.dazhumei.love.postbar.service.CommentService;
 import com.dazhumei.love.postbar.service.PostBarService;
@@ -189,8 +188,6 @@ public class GetOnePostBarPage extends Thread {
 			PostBarService postBarService, PostService postService, CommentService commentService,
 			UserService userService) {
 
-//		Postbar postbar = new Postbar();
-//		postbar.setId(barid);
 		for (int i = sta; i <= end; i++) {
 			int page = i + 1;
 			System.out.println("开始下载" + name + "贴吧的第" + page + "页");
@@ -216,10 +213,6 @@ public class GetOnePostBarPage extends Thread {
 				filep.delete();
 			}
 		}
-
-//		postbar.setIsFinish("完成");
-//		postBarService.updatePostbar(postbar);
-
 	}
 
 	// 得到一页的所以帖子
@@ -255,16 +248,24 @@ public class GetOnePostBarPage extends Thread {
 				String content=null;
 				
 				if(element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ")==null){
-					content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").first().text();
-					if (content == null || "".equals(content)) {
-						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().toString();
+					if(element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").size()==0){
+						content="";
+					}else{
+						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").first().text();
+						if (content == null || "".equals(content)) {
+							content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline  th_bakan").first().toString();
+						}
 					}
 				}else{
-					content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().text();
-
-					if (content == null || "".equals(content)) {
-						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().toString();
+					if(element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").size()==0){
+						content="";
+					}else{
+						content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().text();
+						if (content == null || "".equals(content)) {
+							content = element.getElementsByClass("threadlist_abs threadlist_abs_onlyline ").first().toString();
+						}
 					}
+					
 				}
 
 				System.out.println("帖子内容简介为：" + content);
@@ -413,7 +414,10 @@ public class GetOnePostBarPage extends Thread {
 						filecc.delete();
 					}
 				}
-			} else if (docc.getElementById("j_p_postlist") != null) {
+			}else if(docc.getElementsByClass("ag_head").size() > 0){
+				//图册,目前解析不了
+				
+			}else if (docc.getElementById("j_p_postlist") != null) {
 				// 读取第一条评论
 				Element commontf = docc.getElementById("j_p_postlist");
 				Element flink = commontf.getElementsByTag("cc").first();
